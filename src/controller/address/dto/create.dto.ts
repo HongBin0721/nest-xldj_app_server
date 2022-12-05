@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsNumberString,
   IsBoolean,
+  IsInt,
 } from 'class-validator';
 
 export class CreateDto {
@@ -26,6 +27,15 @@ export class CreateDto {
   @IsNumberString({}, { message: 'phone 必须是数字' })
   @IsNotEmpty({ message: 'phone 不能为空' })
   phone: string;
+
+  @IsInt()
+  provinces: number;
+
+  @IsInt()
+  city: number;
+
+  @IsInt()
+  area: number;
 
   @IsOptional()
   @IsBoolean({ message: 'is_default 必须是布尔值' })

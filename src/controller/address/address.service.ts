@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
+import apis from 'src/config/apis';
 import { Address } from 'src/models/address.model';
 import { User } from 'src/models/user.model';
 
@@ -45,7 +46,23 @@ export class AddressService {
         );
       }
       const user = await this.userModel.findOne({ where: { id: user_id } });
-      return await user.$create('address', data);
+
+      // 获取地址经纬度
+      const locationResult = await apis.geocode.geo({
+        address: data.address + data.detail_address,
+      });
+      console.log(locationResult);
+
+      if (locationResult.status === '0')
+        throw {
+          message: '地址不存在或填写错误',
+        };
+      const location: string = locationResult.geocodes[0].location;
+
+      return await user.$create('address', {
+        ...data,
+        location,
+      });
     } catch (error) {
       throw error;
     }

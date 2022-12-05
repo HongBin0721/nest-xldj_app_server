@@ -36,6 +36,29 @@ export class Address extends Model<Address> {
   phone: string;
 
   @Column({
+    comment: '省份ID',
+    allowNull: false,
+  })
+  provinces: number;
+
+  @Column({
+    comment: '市ID',
+    allowNull: false,
+  })
+  city: number;
+
+  @Column({
+    comment: '区域ID',
+    allowNull: false,
+  })
+  area: number;
+
+  @Column({
+    comment: '地址经纬度',
+  })
+  location: string;
+
+  @Column({
     comment: '是否是默认地址',
     defaultValue: false,
     type: DataType.BOOLEAN,
