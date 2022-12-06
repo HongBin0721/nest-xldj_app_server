@@ -142,7 +142,7 @@ export class AddressService {
     }
   }
 
-  // 编辑地址
+  // 删除地址
   async delete({ address_id }) {
     try {
       return await this.addressModel.destroy({ where: { id: address_id } });

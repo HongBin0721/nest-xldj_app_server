@@ -1,4 +1,5 @@
 import { Dependencies, Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,8 +14,7 @@ import { ShopModule } from './controller/shop/shop.module';
 import { ProductModule } from './controller/product/product.module';
 import { AddressModule } from './controller/address/address.module';
 import { OrderModule } from './controller/order/order.module';
-
-import { ScheduleModule } from '@nestjs/schedule';
+import { TechnicianModule } from './controller/technician/technician.module';
 
 const IS_DEV = process.env.RUNNING_ENV === 'dev';
 const IS_TEST = process.env.RUNNING_ENV === 'test';
@@ -73,6 +73,7 @@ const envFilePath = () => {
     ProductModule,
     AddressModule,
     OrderModule,
+    TechnicianModule,
   ],
   controllers: [AppController],
   providers: [AppService],

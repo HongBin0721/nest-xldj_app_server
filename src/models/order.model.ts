@@ -4,6 +4,7 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
@@ -12,6 +13,7 @@ import { OrderProductAssociations } from './order_product_associations.model';
 import { OrderStatus } from './order_status.model';
 import { PaymentMethod } from './payment_method.model';
 import { Product } from './product.model';
+import { Technician } from './technician.model';
 
 import { User } from './user.model';
 
@@ -90,6 +92,14 @@ export class Order extends Model<Order> {
     },
   })
   expected_driving_time: string;
+
+  @ForeignKey(() => Technician)
+  @Column({
+    comment: '服务人员',
+  })
+  technician_id: number;
+  @BelongsTo(() => Technician)
+  technician: Technician;
 
   @ForeignKey(() => User)
   @Column({})

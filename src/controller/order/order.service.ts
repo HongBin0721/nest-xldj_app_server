@@ -1,3 +1,5 @@
+import { Technician } from 'src/models/technician.model';
+import { ShopAddress } from './../../models/shop_address.model';
 import { Shop } from 'src/models/shop.model';
 import { ProductImage } from 'src/models/product_image.mode';
 import { OrderStatus } from './../../models/order_status.model';
@@ -25,6 +27,10 @@ export class OrderService {
     private userModel: typeof User,
     @InjectModel(Product)
     private productModel: typeof Product,
+    @InjectModel(Shop)
+    private shopModel: typeof Shop,
+    @InjectModel(Technician)
+    private technicianModel: typeof Technician,
   ) {}
 
   async lists({ status, page_size = 20, page_index = 1 }) {
@@ -44,7 +50,7 @@ export class OrderService {
         where: {
           ...where,
         },
-        include: [Address],
+        include: [Address, Technician],
       });
       return {
         lists: rows,
@@ -59,7 +65,10 @@ export class OrderService {
 
   async detail({ order_no }) {
     try {
-      return await this.orderModel.findOne({ where: { order_no } });
+      return await this.orderModel.findOne({
+        where: { order_no },
+        include: [Technician, Address],
+      });
     } catch (error) {
       throw error;
     }
@@ -91,7 +100,7 @@ export class OrderService {
           is_default: true,
         },
       });
-      console.log(!address);
+      console.log(address);
 
       if (!address)
         throw {
@@ -114,24 +123,26 @@ export class OrderService {
       });
       // console.log(products);
 
+      const shop = await this.shopModel.findOne({
+        where: {
+          id: products[0].shop_id,
+        },
+        include: [ShopAddress],
+      });
+      // console.log(shop);
+
       const sumArr: number[] = [];
 
-      const shopLocationResult = await apis.geocode.geo({
-        address: products[0].shop.address,
-      });
-      const shopLocation: string = shopLocationResult.geocodes[0].location;
+      const shopLocation: string = shop.toJSON().address_info.location;
 
-      const userLocationResult = await apis.geocode.geo({
-        address: address.toJSON().address,
-      });
-      const userLocation: string = userLocationResult.geocodes[0].location;
+      const userLocation: string = address.toJSON().location;
 
       console.log('商家坐标：', shopLocation);
       console.log('用户坐标：', userLocation);
 
       const directionWalkingResult = await apis.distance.index({
-        origins: shopLocation,
-        destination: userLocation,
+        origins: shop.toJSON().address_info.location,
+        destination: address.toJSON().location,
         type: '1',
       });
       console.log(directionWalkingResult);
@@ -150,8 +161,16 @@ export class OrderService {
       // 价格 = 时间（分） / 2
       const car_fare = minute / 2;
 
+      // 获取技师列表
+      const technicians = await this.technicianFindAll({
+        where: {
+          shop_id: products[0].shop_id,
+        },
+      });
+
       return {
         address: address,
+        technicians,
         products: products.map((item) => {
           sumArr.push(Number(item['dataValues'].price) * constJson[item.id]);
           return {
@@ -211,6 +230,14 @@ export class OrderService {
     } catch (error) {
       console.log(error);
 
+      throw error;
+    }
+  }
+
+  async technicianFindAll({ where }) {
+    try {
+      return await this.technicianModel.findAll({ where });
+    } catch (error) {
       throw error;
     }
   }

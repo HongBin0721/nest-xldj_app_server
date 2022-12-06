@@ -15,6 +15,10 @@ export class OrderCreateDto {
   @IsNotEmpty({ message: 'address_id 不能为空' })
   address_id: number;
 
+  @IsInt()
+  @IsNotEmpty({ message: 'technician_id 不能为空' })
+  technician_id: number;
+
   @IsDecimal(
     {
       decimal_digits: '2', // 强制2位小数点

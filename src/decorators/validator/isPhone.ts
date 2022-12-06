@@ -5,6 +5,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
+import regular from '../../utils/regular';
 
 // 配置验证注解
 export function IsPhone(validationOptions?: ValidationOptions) {
@@ -26,8 +27,7 @@ export class IsPhoneConstraint implements ValidatorConstraintInterface {
   validate(value: string): Promise<boolean> | boolean {
     // 对草稿配置进行校验
     // 校验程序返回值为boolean类型则代数据格式错误
-    const reg = /^[1][3,4,5,7,8][0-9]{9}$/;
-    return reg.test(value);
+    return regular.isPhone(value);
   }
   // 验证失败时的默认错误信息
   defaultMessage(args: ValidationArguments): string {

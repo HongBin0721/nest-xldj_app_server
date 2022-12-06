@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsObject, IsString } from 'class-validator';
 
 export class CreateDto {
   @IsString()
@@ -25,7 +25,15 @@ export class CreateDto {
   @IsNotEmpty({ message: '封面图不能为空' })
   cover_pic: string;
 
-  @IsString()
+  @IsObject()
   @IsNotEmpty({ message: '地址不能为空' })
-  address: string;
+  address_info: {
+    country: string;
+    province: string;
+    city: string;
+    district: string;
+    detail_address: string;
+    contact_name: string;
+    phone: string;
+  };
 }

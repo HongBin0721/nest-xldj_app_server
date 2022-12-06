@@ -3,13 +3,16 @@ import {
   BelongsTo,
   Column,
   ForeignKey,
+  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
 import regular from '../utils/regular';
+import { Order } from './order.model';
 
 @Table({
   tableName: 'technician',
+  comment: '技师/服务人员',
   timestamps: true, // 默认true。true时会带createdAt、updatedAt字段查表
 })
 export class Technician extends Model<Technician> {
@@ -37,7 +40,7 @@ export class Technician extends Model<Technician> {
     comment: '手机号',
     validate: {
       isPhone(value) {
-        if (regular.isPhone(value)) {
+        if (!regular.isPhone(value)) {
           throw new Error('手机号格式不正确');
         }
       },
@@ -101,4 +104,7 @@ export class Technician extends Model<Technician> {
   shop_id: number;
   @BelongsTo(() => Shop)
   shop: Shop;
+
+  @HasMany(() => Order)
+  order: Order[];
 }

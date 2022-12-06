@@ -4,10 +4,12 @@ import {
   Column,
   ForeignKey,
   HasMany,
+  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { Product } from './product.model';
+import { ShopAddress } from './shop_address.model';
 import { Technician } from './technician.model';
 import { User } from './user.model';
 import { UserShopFollowAssociations } from './user_shop_follow_associations.model';
@@ -18,11 +20,13 @@ import { UserShopFollowAssociations } from './user_shop_follow_associations.mode
 })
 export class Shop extends Model<Shop> {
   @Column({
-    unique: 'nameIndex',
+    comment: '名称',
   })
   name: string;
 
-  @Column({})
+  @Column({
+    comment: '简介',
+  })
   company: string;
 
   @Column({
@@ -42,16 +46,6 @@ export class Shop extends Model<Shop> {
     comment: '简介',
   })
   introduce: string;
-
-  @Column({
-    comment: '地址',
-  })
-  address: string;
-
-  @Column({
-    comment: '详细地址',
-  })
-  detail_address: string;
 
   @Column({
     comment: '封面图',
@@ -75,7 +69,11 @@ export class Shop extends Model<Shop> {
   @BelongsTo(() => User)
   boss: User;
 
-  // 技师（一对多）
+  // 技师/服务人员（一对多）
   @HasMany(() => Technician)
   technician: Technician[];
+
+  // 会员卡
+  @HasOne(() => ShopAddress)
+  address_info: ShopAddress;
 }
