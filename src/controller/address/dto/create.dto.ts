@@ -16,11 +16,11 @@ export class CreateDto {
   province: string;
 
   @IsString()
-  @IsString({ message: 'province 必须是字符串' })
+  @IsString({ message: 'city 必须是字符串' })
   city: string;
 
   @IsString()
-  @IsString({ message: 'province 必须是字符串' })
+  @IsString({ message: 'district 必须是字符串' })
   district: string;
 
   @IsString({ message: 'contact_name 必须是整型' })

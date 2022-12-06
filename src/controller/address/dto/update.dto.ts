@@ -12,17 +12,21 @@ export class UpdateAddressDto {
   @IsNotEmpty({ message: 'id 不能为空' })
   id: number;
 
-  @IsString({ message: 'page_index 必须是整型' })
-  @IsNotEmpty({ message: '页码不能为空' })
-  address: number;
+  @IsString()
+  @IsString({ message: 'province 必须是字符串' })
+  province: string;
+
+  @IsString()
+  @IsString({ message: 'city 必须是字符串' })
+  city: string;
+
+  @IsString()
+  @IsString({ message: 'district 必须是字符串' })
+  district: string;
 
   @IsString({ message: 'page_size 必须是整型' })
   @IsNotEmpty({ message: '页大小不能为空' })
   detail_address: number;
-
-  @IsOptional()
-  @IsString({ message: 'house_number 必须是字符串' })
-  house_number: string;
 
   @IsString({ message: 'contact_name 必须是整型' })
   @IsNotEmpty({ message: 'contact_name 不能为空' })

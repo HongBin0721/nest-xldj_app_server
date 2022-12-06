@@ -61,18 +61,19 @@ export class AddressService {
         throw {
           message: '地址不存在或填写错误',
         };
-      const location: string = locationResult.geocodes[0].location;
-      const ad_code: string = locationResult.geocodes[0].adcode;
+      const ADDRESS_INFO = locationResult.geocodes[0];
+      const location: string = ADDRESS_INFO.location;
+      const ad_code: string = ADDRESS_INFO.adcode;
 
       return await user.$create('address', {
         ...data,
         location,
         ad_code,
-        country,
+        country: ADDRESS_INFO.country,
         house_number:
-          typeof locationResult.geocodes[0].number === 'string' &&
-          locationResult.geocodes[0].number.length > 0
-            ? locationResult.geocodes[0].number
+          typeof ADDRESS_INFO.number === 'string' &&
+          ADDRESS_INFO.number.length > 0
+            ? ADDRESS_INFO.number
             : '',
       });
     } catch (error) {
@@ -99,13 +100,43 @@ export class AddressService {
   // 编辑地址
   async update({ data, user_id }) {
     try {
+      // 获取地址经纬度
+      const country = data.country || '中国';
+      const locationResult = await apis.geocode.geo({
+        address:
+          country +
+          data.province +
+          data.city +
+          data.district +
+          data.detail_address,
+      });
+      if (locationResult.status === '0')
+        throw {
+          message: '地址不存在或填写错误',
+        };
+      const ADDRESS_INFO = locationResult.geocodes[0];
+      const location: string = ADDRESS_INFO.location;
+      const ad_code: string = ADDRESS_INFO.adcode;
       if (data.is_default) {
         await this.addressModel.update(
           { is_default: false },
           { where: { user_id: user_id } },
         );
       }
-      return await this.addressModel.update(data, { where: { id: data.id } });
+      return await this.addressModel.update(
+        {
+          ...data,
+          location,
+          ad_code,
+          country: ADDRESS_INFO.country,
+          house_number:
+            typeof ADDRESS_INFO.number === 'string' &&
+            ADDRESS_INFO.number.length > 0
+              ? ADDRESS_INFO.number
+              : '',
+        },
+        { where: { id: data.id } },
+      );
     } catch (error) {
       throw error;
     }
