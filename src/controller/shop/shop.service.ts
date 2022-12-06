@@ -6,6 +6,7 @@ import apis from 'src/config/apis';
 import { Shop } from 'src/models/shop.model';
 import { User } from 'src/models/user.model';
 import { CreateDto } from './dto/create.dto';
+import { Technician } from 'src/models/technician.model';
 
 @Injectable()
 export class ShopService {
@@ -141,13 +142,55 @@ export class ShopService {
       const shop = await this.shopModel.findOne({
         where: {
           id: shop_id,
-          boss_id: {
-            [Op.ne]: user_id,
-          },
         },
       });
       if (!shop) throw { message: '店铺不存在' };
       return await shop.$add('fans', user);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // 店铺详情
+  async detail(opstion: { shop_id: string }) {
+    try {
+      return await this.shopModel.findOne({
+        where: { id: opstion.shop_id },
+        include: [
+          {
+            model: ShopAddress,
+          },
+          {
+            model: User,
+            as: 'boss',
+          },
+          {
+            model: Technician,
+          },
+        ],
+        attributes: {
+          include: [
+            [
+              sequelize.literal(`(
+              SELECT COUNT(*)
+              FROM user_shop_follow_associations
+              WHERE
+              user_shop_follow_associations.shop_id = shop.id
+          )`),
+              'fans_count',
+            ],
+            [
+              sequelize.literal(`(
+              SELECT COUNT(*)
+              FROM product
+              WHERE
+              product.shop_id = shop.id
+          )`),
+              'product_count',
+            ],
+          ],
+        },
+      });
     } catch (error) {
       throw error;
     }

@@ -68,7 +68,7 @@ export class Product extends Model<Product> {
   @BelongsToMany(() => User, () => UserProductBuyAssociations)
   sell_lists: User[];
 
-  // 浏览 可以被多个用户购买（多对多）
+  // 浏览 可以被多个用户浏览（多对多）
   @BelongsToMany(() => User, () => UserProductBrowseAssociations)
   browse_users: User[];
 

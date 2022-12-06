@@ -5,9 +5,12 @@ import {
   UseGuards,
   Request,
   HttpException,
+  Get,
+  Query,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateDto } from './dto/create.dto';
+import { DetailDto } from './dto/detail.dto';
 import { FollowDto } from './dto/follow.dto';
 import { ListsDto } from './dto/lists.dto';
 import { ShopService } from './shop.service';
@@ -49,6 +52,16 @@ export class ShopController {
     } catch (error) {
       console.log(error);
 
+      throw new HttpException(error, 400);
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('detail')
+  async detail(@Request() req, @Query() query: DetailDto): Promise<object> {
+    try {
+      return this.shopService.detail({ shop_id: query.shop_id });
+    } catch (error) {
       throw new HttpException(error, 400);
     }
   }

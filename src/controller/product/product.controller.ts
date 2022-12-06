@@ -94,6 +94,7 @@ export class ProductController {
     try {
       return await this.productService.getDetail({
         product_id: body.product_id,
+        user_id: req.user.id,
       });
     } catch (error) {
       throw new HttpException(error, 400);

@@ -155,9 +155,9 @@ export class ProductService {
   }
 
   // 详情
-  async getDetail({ product_id }) {
+  async getDetail({ product_id, user_id }) {
     try {
-      return await this.productModel.findOne({
+      const product = await this.productModel.findOne({
         where: { id: product_id },
         include: [ProductImage, ProductUnit],
         attributes: {
@@ -192,6 +192,13 @@ export class ProductService {
           ],
         },
       });
+      const user = await this.userModel.findOne({ where: { id: user_id } });
+      if (!user)
+        throw {
+          message: '用户不存在',
+        };
+      await product.$add('browse_users', user);
+      return product;
     } catch (error) {
       throw error;
     }
