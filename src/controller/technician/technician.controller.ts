@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateDto } from './dto/create.dto';
+import { DetailDto } from './dto/detail.dto';
 import { ListsDto } from './dto/lists.dto';
 import { RemoveDto } from './dto/remove.dto';
 import { TechnicianService } from './technician.service';
@@ -55,6 +56,18 @@ export class TechnicianController {
           },
         }),
       };
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('detail')
+  async detail(@Query() query: DetailDto, @Request() req): Promise<object> {
+    try {
+      return await this.technicianService.detail({
+        technician_id: query.technician_id,
+      });
     } catch (error) {
       throw new HttpException(error, 400);
     }

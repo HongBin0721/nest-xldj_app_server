@@ -1,3 +1,5 @@
+import { ShopAddress } from './../../models/shop_address.model';
+import { Shop } from 'src/models/shop.model';
 import { Technician } from 'src/models/technician.model';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
@@ -18,7 +20,19 @@ export class TechnicianService {
 
   async findAll({ where }) {
     try {
-      return await this.technicianModel.findAll({ where });
+      return await this.technicianModel.findAll({
+        where,
+        include: [
+          {
+            model: Shop,
+            include: [
+              {
+                model: ShopAddress,
+              },
+            ],
+          },
+        ],
+      });
     } catch (error) {
       throw error;
     }
@@ -27,6 +41,26 @@ export class TechnicianService {
   async remove({ where }) {
     try {
       return await this.technicianModel.destroy({ where });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async detail(opstion: { technician_id: string }) {
+    try {
+      return await this.technicianModel.findOne({
+        where: { id: opstion.technician_id },
+        include: [
+          {
+            model: Shop,
+            include: [
+              {
+                model: ShopAddress,
+              },
+            ],
+          },
+        ],
+      });
     } catch (error) {
       throw error;
     }
