@@ -48,20 +48,32 @@ export class AddressService {
       const user = await this.userModel.findOne({ where: { id: user_id } });
 
       // 获取地址经纬度
+      const country = data.country || '中国';
       const locationResult = await apis.geocode.geo({
-        address: data.address + data.detail_address,
+        address:
+          country +
+          data.province +
+          data.city +
+          data.district +
+          data.detail_address,
       });
-      console.log(locationResult);
-
       if (locationResult.status === '0')
         throw {
           message: '地址不存在或填写错误',
         };
       const location: string = locationResult.geocodes[0].location;
+      const ad_code: string = locationResult.geocodes[0].adcode;
 
       return await user.$create('address', {
         ...data,
         location,
+        ad_code,
+        country,
+        house_number:
+          typeof locationResult.geocodes[0].number === 'string' &&
+          locationResult.geocodes[0].number.length > 0
+            ? locationResult.geocodes[0].number
+            : '',
       });
     } catch (error) {
       throw error;
