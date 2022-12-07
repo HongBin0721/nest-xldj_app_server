@@ -20,6 +20,7 @@ import { UserProductBrowseAssociations } from './user_product_browse_association
 import { ProductTypeAssociations } from './product_type_associations.model';
 import { UserProductFavoriteAssociations } from './user_product_favorite_associations.model';
 import { Order } from './order.model';
+import { Classify } from './classify.model';
 
 @Table({
   tableName: 'product',
@@ -94,4 +95,14 @@ export class Product extends Model<Product> {
   // 产品与订单的关系 多对多
   @BelongsToMany(() => Order, () => OrderProductAssociations)
   orders: Order[];
+
+  // 分类
+  @ForeignKey(() => Classify)
+  @Column({
+    comment: '分类ID',
+    allowNull: false,
+  })
+  classify_id: number;
+  @BelongsTo(() => Classify)
+  classify: Classify;
 }

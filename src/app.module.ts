@@ -15,6 +15,7 @@ import { ProductModule } from './controller/product/product.module';
 import { AddressModule } from './controller/address/address.module';
 import { OrderModule } from './controller/order/order.module';
 import { TechnicianModule } from './controller/technician/technician.module';
+import { ClassifyModule } from './classify/classify.module';
 
 const IS_DEV = process.env.RUNNING_ENV === 'dev';
 const IS_TEST = process.env.RUNNING_ENV === 'test';
@@ -74,6 +75,7 @@ const envFilePath = () => {
     AddressModule,
     OrderModule,
     TechnicianModule,
+    ClassifyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

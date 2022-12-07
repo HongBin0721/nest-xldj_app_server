@@ -59,6 +59,10 @@ export class CreateDto {
   @IsNotEmpty({ message: 'unit_id 单位ID不能为空' })
   unit_id: number;
 
+  @IsInt()
+  @IsNotEmpty({ message: 'classify_id 不能为空' })
+  classify_id: number;
+
   @ArrayMinSize(1, { message: 'imgs 必须大于1张 小于5张图片' })
   @ArrayMaxSize(5, { message: 'imgs 必须大于1张 小于5张图片' })
   @IsNotEmpty({ message: 'imgs 产品图片不能为空' })

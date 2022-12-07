@@ -9,6 +9,7 @@ import { ProductService } from './product.service';
 import { ProductUnit } from 'src/models/product_unit.model';
 import { User } from 'src/models/user.model';
 import { OrderProductAssociations } from 'src/models/order_product_associations.model';
+import { Classify } from 'src/models/classify.model';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { OrderProductAssociations } from 'src/models/order_product_associations.
       User,
       OrderProductAssociations,
       Order,
+      Classify,
     ]),
   ],
   controllers: [ProductController],
