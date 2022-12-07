@@ -2,6 +2,8 @@ import { Classify } from './../models/classify.model';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateDto } from './dto/create.dto';
+import { WhereOptions } from 'sequelize';
+import { UpdateDto } from './dto/update.dto';
 
 @Injectable()
 export class ClassifyService {
@@ -69,6 +71,24 @@ export class ClassifyService {
         }
       }
       return await this.classifyModel.create(opstion.data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async update(opstion: { where: WhereOptions; data: UpdateDto }) {
+    try {
+      return await this.classifyModel.update(opstion.data, {
+        where: opstion.where,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async remove(opstion: { where: WhereOptions }) {
+    try {
+      return await this.classifyModel.destroy({ where: opstion.where });
     } catch (error) {
       throw error;
     }

@@ -53,6 +53,12 @@ export class Product extends Model<Product> {
   detail: string;
 
   @Column({
+    comment: '状态 1:已上架  2:已下架',
+    defaultValue: 2,
+  })
+  status: number;
+
+  @Column({
     comment: '封面图',
   })
   cover_pic: string;

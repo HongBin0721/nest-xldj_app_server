@@ -6,12 +6,14 @@ import {
   Body,
   Request,
   Get,
+  Query,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateDto } from './dto/create.dto';
 import { DetailDto } from './dto/detail.dto';
 import { FavoriteDto } from './dto/favorite.dto';
 import { ListsDto } from './dto/lists.dto';
+import { SetStatusDto } from './dto/set_status.dto';
 import { UnitCreateDto } from './dto/unit.create.dto';
 import { ProductService } from './product.service';
 
@@ -20,10 +22,10 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Post('/lists')
-  async lists(@Body() body: ListsDto, @Request() req) {
+  @Get('/lists')
+  async lists(@Query() query: ListsDto, @Request() req) {
     try {
-      return await this.productService.lists(body);
+      return await this.productService.lists(query);
     } catch (error) {
       throw new HttpException(error, 400);
     }
@@ -95,6 +97,22 @@ export class ProductController {
       return await this.productService.getDetail({
         product_id: body.product_id,
         user_id: req.user.id,
+      });
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
+  }
+
+  // 获取产品详情
+  @UseGuards(JwtAuthGuard)
+  @Post('/setStatus')
+  async setStatus(@Body() body: SetStatusDto, @Request() req) {
+    try {
+      return await this.productService.setStatus({
+        status: body.status,
+        where: {
+          id: body.product_id,
+        },
       });
     } catch (error) {
       throw new HttpException(error, 400);

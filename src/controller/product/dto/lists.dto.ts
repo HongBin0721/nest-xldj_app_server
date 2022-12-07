@@ -1,15 +1,23 @@
-import { IsOptional, IsInt, IsNotEmpty } from 'class-validator';
+import { IsOptional, IsNotEmpty, IsNumberString } from 'class-validator';
 
 export class ListsDto {
-  @IsInt({ message: 'page_index 必须是整型' })
+  @IsNumberString({})
   @IsNotEmpty({ message: '页码不能为空' })
-  page_index: number;
+  page_index: string;
 
-  @IsInt({ message: 'page_size 必须是整型' })
+  @IsNumberString({})
   @IsNotEmpty({ message: '页大小不能为空' })
-  page_size: number;
+  page_size: string;
 
   @IsOptional()
-  @IsInt({ message: 'shop_id 必须是整型' })
-  shop_id: number;
+  @IsNumberString({})
+  shop_id?: string;
+
+  @IsOptional()
+  @IsNumberString({})
+  classify_id?: string;
+
+  @IsOptional()
+  @IsNumberString({})
+  status?: string;
 }

@@ -1,3 +1,5 @@
+import { ListsDto } from './dto/lists.dto';
+import { Classify } from 'src/models/classify.model';
 import { Product } from 'src/models/product.model';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
@@ -6,6 +8,8 @@ import { Shop } from 'src/models/shop.model';
 import { ProductImage } from 'src/models/product_image.mode';
 import { Sequelize } from 'sequelize-typescript';
 import { User } from 'src/models/user.model';
+import { WhereOptions } from 'sequelize';
+import { UpdateDto } from './dto/update.dto';
 
 @Injectable()
 export class ProductService {
@@ -23,16 +27,27 @@ export class ProductService {
     private sequelize: Sequelize,
   ) {}
 
-  async lists({ shop_id, page_size = 20, page_index = 1 }) {
+  async lists(opstion: ListsDto) {
+    const {
+      shop_id,
+      classify_id,
+      status = 1,
+      page_size = '20',
+      page_index = '1',
+    } = opstion;
     try {
-      const pageSize = page_size;
-      const pageIndex = pageSize * (page_index - 1);
+      const pageSize = parseInt(page_size);
+      const pageIndex = pageSize * (parseInt(page_index) - 1);
 
       interface WhereParams {
         shop_id?: number;
+        classify_id?: number;
+        status?: number;
       }
       const where: WhereParams = {};
-      if (shop_id != null) where.shop_id = shop_id;
+      if (shop_id != null) where.shop_id = Number(shop_id);
+      if (classify_id != null) where.classify_id = Number(classify_id);
+      if (status != null) where.status = Number(status);
 
       const { rows, count } = await this.productModel.findAndCountAll({
         limit: pageSize,
@@ -40,7 +55,7 @@ export class ProductService {
         where: {
           ...where,
         },
-        include: [ProductImage, ProductUnit],
+        include: [ProductImage, ProductUnit, Classify],
         attributes: {
           include: [
             [
@@ -158,7 +173,7 @@ export class ProductService {
   async getDetail({ product_id, user_id }) {
     try {
       const product = await this.productModel.findOne({
-        where: { id: product_id },
+        where: { id: product_id, status: 1 },
         include: [ProductImage, ProductUnit],
         attributes: {
           include: [
@@ -197,8 +212,33 @@ export class ProductService {
         throw {
           message: '用户不存在',
         };
+      if (!product)
+        throw {
+          message: '产品不存在或已下架',
+        };
       await product.$add('browse_users', user);
       return product;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async update(opstion: { where: WhereOptions; data: Product }) {
+    try {
+      return await this.productModel.update(opstion.data, {
+        where: opstion.where,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async setStatus(opstion: { status: number; where: WhereOptions }) {
+    try {
+      return await this.productModel.update(
+        { status: opstion.status },
+        { where: opstion.where },
+      );
     } catch (error) {
       throw error;
     }
