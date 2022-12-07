@@ -1,4 +1,3 @@
-import { ShopAddress } from './../../models/shop_address.model';
 import { Module } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { OrderController } from './order.controller';
@@ -11,6 +10,7 @@ import { User } from 'src/models/user.model';
 import { Product } from 'src/models/product.model';
 import { Technician } from 'src/models/technician.model';
 import { Shop } from 'src/models/shop.model';
+import { ShopAddress } from 'src/models/shop_address.model';
 
 @Module({
   imports: [

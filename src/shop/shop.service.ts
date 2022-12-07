@@ -1,12 +1,12 @@
-import { ShopAddress } from './../../models/shop_address.model';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import sequelize, { Op } from 'sequelize';
+import sequelize from 'sequelize';
 import apis from 'src/config/apis';
 import { Shop } from 'src/models/shop.model';
 import { User } from 'src/models/user.model';
 import { CreateDto } from './dto/create.dto';
 import { Technician } from 'src/models/technician.model';
+import { ShopAddress } from 'src/models/shop_address.model';
 
 @Injectable()
 export class ShopService {
@@ -18,38 +18,38 @@ export class ShopService {
   ) {}
 
   // 创建店铺
-  async create(opstion: { user_id: number; data: CreateDto }) {
+  async create(option: { user_id: number; data: CreateDto }) {
     try {
       const user = await this.userModel.findOne({
-        where: { id: opstion.user_id },
+        where: { id: option.user_id },
       });
 
       if (!user) throw { message: '用户不存在' };
 
       const hasName = await this.shopModel.count({
         where: {
-          name: opstion.data.name,
+          name: option.data.name,
         },
       });
       if (hasName > 0) throw { message: '店铺名称已存在，不能使用' };
 
       // 获取地址经纬度
-      const country = opstion.data.address_info.country || '中国';
+      const country = option.data.address_info.country || '中国';
       console.log(
         country +
-          opstion.data.address_info.province +
-          opstion.data.address_info.city +
-          opstion.data.address_info.district +
-          opstion.data.address_info.detail_address,
+          option.data.address_info.province +
+          option.data.address_info.city +
+          option.data.address_info.district +
+          option.data.address_info.detail_address,
       );
 
       const locationResult = await apis.geocode.geo({
         address:
           country +
-          opstion.data.address_info.province +
-          opstion.data.address_info.city +
-          opstion.data.address_info.district +
-          opstion.data.address_info.detail_address,
+          option.data.address_info.province +
+          option.data.address_info.city +
+          option.data.address_info.district +
+          option.data.address_info.detail_address,
       });
       if (locationResult.status === '0')
         throw {
@@ -60,14 +60,15 @@ export class ShopService {
       const location: string = ADDRESS_INFO.location;
       const ad_code: string = ADDRESS_INFO.adcode;
 
-      const { address_info, ...formData } = opstion.data;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { address_info, ...formData } = option.data;
 
       const shop = await this.shopModel.create({
         ...formData,
         boss_id: user.id,
       });
       await shop.$create('address_info', {
-        ...opstion.data.address_info,
+        ...option.data.address_info,
         location,
         ad_code,
         country: ADDRESS_INFO.country,
@@ -152,10 +153,10 @@ export class ShopService {
   }
 
   // 店铺详情
-  async detail(opstion: { shop_id: string }) {
+  async detail(option: { shop_id: string }) {
     try {
       return await this.shopModel.findOne({
-        where: { id: opstion.shop_id },
+        where: { id: option.shop_id },
         include: [
           {
             model: ShopAddress,

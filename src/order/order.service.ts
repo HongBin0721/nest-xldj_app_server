@@ -1,9 +1,6 @@
 import { Technician } from 'src/models/technician.model';
-import { ShopAddress } from './../../models/shop_address.model';
 import { Shop } from 'src/models/shop.model';
 import { ProductImage } from 'src/models/product_image.mode';
-import { OrderStatus } from './../../models/order_status.model';
-import { Order } from './../../models/order.model';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Cron } from '@nestjs/schedule';
@@ -11,8 +8,11 @@ import { Address } from 'src/models/address.model';
 import { User } from 'src/models/user.model';
 import { Product } from 'src/models/product.model';
 import { ProductUnit } from 'src/models/product_unit.model';
-import methods from '../../utils/methods';
 import apis from 'src/config/apis';
+import methods from 'src/utils/methods';
+import { Order } from 'src/models/order.model';
+import { OrderStatus } from 'src/models/order_status.model';
+import { ShopAddress } from 'src/models/shop_address.model';
 
 @Injectable()
 export class OrderService {

@@ -1,8 +1,8 @@
-import { ShopAddress } from './../../models/shop_address.model';
 import { Shop } from 'src/models/shop.model';
 import { Technician } from 'src/models/technician.model';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { ShopAddress } from 'src/models/shop_address.model';
 
 @Injectable()
 export class TechnicianService {

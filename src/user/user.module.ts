@@ -1,4 +1,3 @@
-import { ProductType } from './../../models/product_type.model';
 import { Module } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
@@ -18,6 +17,7 @@ import { ProductTypeAssociations } from 'src/models/product_type_associations.mo
 import { UserProductFavoriteAssociations } from 'src/models/user_product_favorite_associations.model';
 import { Address } from 'src/models/address.model';
 import { VipCard } from 'src/models/vip_card.model';
+import { ProductType } from 'src/models/product_type.model';
 
 @Module({
   imports: [
