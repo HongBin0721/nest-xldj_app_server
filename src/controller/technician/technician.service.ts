@@ -46,10 +46,10 @@ export class TechnicianService {
     }
   }
 
-  async detail(opstion: { technician_id: string }) {
+  async detail(option: { technician_id: string }) {
     try {
       return await this.technicianModel.findOne({
-        where: { id: opstion.technician_id },
+        where: { id: option.technician_id },
         include: [
           {
             model: Shop,

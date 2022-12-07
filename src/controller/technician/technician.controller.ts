@@ -3,7 +3,6 @@ import {
   Controller,
   Post,
   UseGuards,
-  Request,
   HttpException,
   Get,
   Query,
@@ -21,7 +20,7 @@ export class TechnicianController {
 
   @UseGuards(JwtAuthGuard)
   @Post('create')
-  async create(@Body() appBody: CreateDto, @Request() req): Promise<object> {
+  async create(@Body() appBody: CreateDto): Promise<object> {
     try {
       return await this.technicianService.create({
         data: appBody,
@@ -33,7 +32,7 @@ export class TechnicianController {
 
   @UseGuards(JwtAuthGuard)
   @Get('lists')
-  async lists(@Query() query: ListsDto, @Request() req): Promise<object> {
+  async lists(@Query() query: ListsDto): Promise<object> {
     try {
       return await this.technicianService.findAll({
         where: {
@@ -47,7 +46,7 @@ export class TechnicianController {
 
   @UseGuards(JwtAuthGuard)
   @Post('remove')
-  async remove(@Body() appBody: RemoveDto, @Request() req): Promise<object> {
+  async remove(@Body() appBody: RemoveDto): Promise<object> {
     try {
       return {
         id: await this.technicianService.remove({
@@ -63,7 +62,7 @@ export class TechnicianController {
 
   @UseGuards(JwtAuthGuard)
   @Get('detail')
-  async detail(@Query() query: DetailDto, @Request() req): Promise<object> {
+  async detail(@Query() query: DetailDto): Promise<object> {
     try {
       return await this.technicianService.detail({
         technician_id: query.technician_id,

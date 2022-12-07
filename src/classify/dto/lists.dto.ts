@@ -1,4 +1,4 @@
-import { IsOptional, IsInt, IsNumberString } from 'class-validator';
+import { IsOptional, IsNumberString } from 'class-validator';
 
 export class ListsDto {
   @IsOptional()

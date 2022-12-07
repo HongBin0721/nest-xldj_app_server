@@ -11,13 +11,13 @@ export class ClassifyService {
     @InjectModel(Classify)
     private classifyModel: typeof Classify,
   ) {}
-  async lists(opstion: { is_tree?: number; parent_id?: number }) {
-    console.log(opstion);
+  async lists(option: { is_tree?: number; parent_id?: number }) {
+    console.log(option);
 
     try {
       const WHERE: { parent_id?: number } = {};
-      if (opstion.parent_id != null) {
-        WHERE.parent_id = opstion.parent_id;
+      if (option.parent_id != null) {
+        WHERE.parent_id = option.parent_id;
       }
       console.log('查询条件:', WHERE);
 
@@ -26,7 +26,7 @@ export class ClassifyService {
       });
       console.log(classify);
 
-      if (opstion.is_tree === 1) {
+      if (option.is_tree === 1) {
         function toTree(list, root) {
           const arr = [];
           // 1.遍历
@@ -48,9 +48,9 @@ export class ClassifyService {
           return arr;
         }
 
-        const result = toTree(classify, opstion.parent_id);
+        const result = toTree(classify, option.parent_id);
         return result;
-      } else if (opstion.is_tree === 0 || opstion.is_tree == null) {
+      } else if (option.is_tree === 0 || option.is_tree == null) {
         return classify;
       }
     } catch (error) {
@@ -58,11 +58,11 @@ export class ClassifyService {
     }
   }
 
-  async create(opstion: { data: CreateDto }) {
+  async create(option: { data: CreateDto }) {
     try {
-      if (opstion.data.parent_id != null) {
+      if (option.data.parent_id != null) {
         const count = await this.classifyModel.count({
-          where: { id: opstion.data.parent_id },
+          where: { id: option.data.parent_id },
         });
         if (count < 1) {
           throw {
@@ -70,25 +70,25 @@ export class ClassifyService {
           };
         }
       }
-      return await this.classifyModel.create(opstion.data);
+      return await this.classifyModel.create(option.data);
     } catch (error) {
       throw error;
     }
   }
 
-  async update(opstion: { where: WhereOptions; data: UpdateDto }) {
+  async update(option: { where: WhereOptions; data: UpdateDto }) {
     try {
-      return await this.classifyModel.update(opstion.data, {
-        where: opstion.where,
+      return await this.classifyModel.update(option.data, {
+        where: option.where,
       });
     } catch (error) {
       throw error;
     }
   }
 
-  async remove(opstion: { where: WhereOptions }) {
+  async remove(option: { where: WhereOptions }) {
     try {
-      return await this.classifyModel.destroy({ where: opstion.where });
+      return await this.classifyModel.destroy({ where: option.where });
     } catch (error) {
       throw error;
     }

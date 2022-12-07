@@ -4,7 +4,6 @@ import {
   HttpException,
   Query,
   UseGuards,
-  Request,
   Post,
   Body,
 } from '@nestjs/common';
@@ -21,7 +20,7 @@ export class ClassifyController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/lists')
-  async lists(@Query() query: ListsDto, @Request() req): Promise<object> {
+  async lists(@Query() query: ListsDto): Promise<object> {
     try {
       return await this.classifyService.lists({
         is_tree: query.is_tree != null ? Number(query.is_tree) : null,
@@ -34,7 +33,7 @@ export class ClassifyController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/create')
-  async create(@Body() body: CreateDto, @Request() req) {
+  async create(@Body() body: CreateDto) {
     try {
       return await this.classifyService.create({
         data: body,
@@ -46,7 +45,7 @@ export class ClassifyController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/update')
-  async update(@Body() body: UpdateDto, @Request() req) {
+  async update(@Body() body: UpdateDto) {
     try {
       return await this.classifyService.update({
         where: { id: body.id },
@@ -64,7 +63,7 @@ export class ClassifyController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/remove')
-  async remove(@Body() body: RemoveDto, @Request() req) {
+  async remove(@Body() body: RemoveDto) {
     try {
       return await this.classifyService.remove({
         where: { id: body.id },

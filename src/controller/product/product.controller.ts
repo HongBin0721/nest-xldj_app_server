@@ -23,7 +23,7 @@ export class ProductController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/lists')
-  async lists(@Query() query: ListsDto, @Request() req) {
+  async lists(@Query() query: ListsDto) {
     try {
       return await this.productService.lists(query);
     } catch (error) {
@@ -33,7 +33,7 @@ export class ProductController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/create')
-  async create(@Body() body: CreateDto, @Request() req) {
+  async create(@Body() body: CreateDto) {
     try {
       return await this.productService.create({ data: body });
     } catch (error) {
@@ -43,7 +43,7 @@ export class ProductController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/unit/create')
-  async unitCreate(@Body() body: UnitCreateDto, @Request() req) {
+  async unitCreate(@Body() body: UnitCreateDto) {
     try {
       return await this.productService.unitCreate({ data: body });
     } catch (error) {
@@ -106,7 +106,7 @@ export class ProductController {
   // 获取产品详情
   @UseGuards(JwtAuthGuard)
   @Post('/setStatus')
-  async setStatus(@Body() body: SetStatusDto, @Request() req) {
+  async setStatus(@Body() body: SetStatusDto) {
     try {
       return await this.productService.setStatus({
         status: body.status,

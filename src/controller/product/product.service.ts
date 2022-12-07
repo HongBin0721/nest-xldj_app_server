@@ -9,7 +9,6 @@ import { ProductImage } from 'src/models/product_image.mode';
 import { Sequelize } from 'sequelize-typescript';
 import { User } from 'src/models/user.model';
 import { WhereOptions } from 'sequelize';
-import { UpdateDto } from './dto/update.dto';
 
 @Injectable()
 export class ProductService {
@@ -27,14 +26,14 @@ export class ProductService {
     private sequelize: Sequelize,
   ) {}
 
-  async lists(opstion: ListsDto) {
+  async lists(option: ListsDto) {
     const {
       shop_id,
       classify_id,
       status = 1,
       page_size = '20',
       page_index = '1',
-    } = opstion;
+    } = option;
     try {
       const pageSize = parseInt(page_size);
       const pageIndex = pageSize * (parseInt(page_index) - 1);
@@ -223,21 +222,21 @@ export class ProductService {
     }
   }
 
-  async update(opstion: { where: WhereOptions; data: Product }) {
+  async update(option: { where: WhereOptions; data: Product }) {
     try {
-      return await this.productModel.update(opstion.data, {
-        where: opstion.where,
+      return await this.productModel.update(option.data, {
+        where: option.where,
       });
     } catch (error) {
       throw error;
     }
   }
 
-  async setStatus(opstion: { status: number; where: WhereOptions }) {
+  async setStatus(option: { status: number; where: WhereOptions }) {
     try {
       return await this.productModel.update(
-        { status: opstion.status },
-        { where: opstion.where },
+        { status: option.status },
+        { where: option.where },
       );
     } catch (error) {
       throw error;
