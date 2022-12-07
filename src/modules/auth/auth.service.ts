@@ -3,8 +3,8 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from 'src/models/user.model';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/user/user.service';
 import { VipCard } from 'src/models/vip_card.model';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {

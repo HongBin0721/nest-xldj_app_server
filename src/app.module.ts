@@ -3,18 +3,18 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
-import { RoleModule } from './role/role.module';
-import { UploadModule } from './upload/upload.module';
 
 import { SequelizeModule } from '@nestjs/sequelize/dist/sequelize.module';
-import { AuthModule } from './auth/auth.module';
-import { ShopModule } from './shop/shop.module';
-import { ProductModule } from './product/product.module';
-import { AddressModule } from './address/address.module';
-import { OrderModule } from './order/order.module';
-import { TechnicianModule } from './technician/technician.module';
-import { ClassifyModule } from './classify/classify.module';
+import { OrderModule } from './modules/order/order.module';
+import { AddressModule } from './modules/address/address.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { ClassifyModule } from './modules/classify/classify.module';
+import { ProductModule } from './modules/product/product.module';
+import { RoleModule } from './modules/role/role.module';
+import { ShopModule } from './modules/shop/shop.module';
+import { TechnicianModule } from './modules/technician/technician.module';
+import { UploadModule } from './modules/upload/upload.module';
+import { UserModule } from './modules/user/user.module';
 
 const IS_DEV = process.env.RUNNING_ENV === 'dev';
 const IS_TEST = process.env.RUNNING_ENV === 'test';

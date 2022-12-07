@@ -1,9 +1,9 @@
-import { Classify } from './../models/classify.model';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateDto } from './dto/create.dto';
 import { WhereOptions } from 'sequelize';
 import { UpdateDto } from './dto/update.dto';
+import { Classify } from 'src/models/classify.model';
 
 @Injectable()
 export class ClassifyService {

@@ -7,7 +7,7 @@ import {
   Post,
   Body,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ClassifyService } from './classify.service';
 import { CreateDto } from './dto/create.dto';
 import { ListsDto } from './dto/lists.dto';

@@ -1,5 +1,5 @@
 import { Body, Controller, Post, UseGuards, Request } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { EmailRegisterBodyDto } from './dto/email_register_body.dto';
 import { ListsDto } from './dto/lists.dto';
 import { LoginHistoryDto } from './dto/login_history.dto';
