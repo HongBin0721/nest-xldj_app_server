@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -18,6 +18,7 @@ import { UserProductFavoriteAssociations } from 'src/models/user_product_favorit
 import { Address } from 'src/models/address.model';
 import { VipCard } from 'src/models/vip_card.model';
 import { ProductType } from 'src/models/product_type.model';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { ProductType } from 'src/models/product_type.model';
       Address,
       VipCard,
     ]),
+    forwardRef(() => AuthModule),
   ],
   controllers: [UserController],
   providers: [UserService],

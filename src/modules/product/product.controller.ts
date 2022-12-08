@@ -91,11 +91,11 @@ export class ProductController {
 
   // 获取产品详情
   @UseGuards(JwtAuthGuard)
-  @Post('/detail')
-  async detail(@Body() body: DetailDto, @Request() req) {
+  @Get('/detail')
+  async detail(@Query() query: DetailDto, @Request() req) {
     try {
       return await this.productService.getDetail({
-        product_id: body.product_id,
+        product_id: query.product_id,
         user_id: req.user.id,
       });
     } catch (error) {
@@ -103,7 +103,7 @@ export class ProductController {
     }
   }
 
-  // 获取产品详情
+  // 设置产品状态
   @UseGuards(JwtAuthGuard)
   @Post('/setStatus')
   async setStatus(@Body() body: SetStatusDto) {

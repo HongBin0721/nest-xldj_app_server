@@ -13,6 +13,7 @@ import { CreateDto } from './dto/create.dto';
 import { DetailDto } from './dto/detail.dto';
 import { FollowDto } from './dto/follow.dto';
 import { ListsDto } from './dto/lists.dto';
+import { SetStatusDto } from './dto/set_status.dto';
 import { ShopService } from './shop.service';
 
 @Controller('shop')
@@ -61,6 +62,22 @@ export class ShopController {
   async detail(@Request() req, @Query() query: DetailDto): Promise<object> {
     try {
       return this.shopService.detail({ shop_id: query.shop_id });
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
+  }
+
+  // 设置店铺状态
+  @UseGuards(JwtAuthGuard)
+  @Post('/setStatus')
+  async setStatus(@Body() body: SetStatusDto) {
+    try {
+      return await this.shopService.setStatus({
+        status: body.status,
+        where: {
+          id: body.shop_id,
+        },
+      });
     } catch (error) {
       throw new HttpException(error, 400);
     }

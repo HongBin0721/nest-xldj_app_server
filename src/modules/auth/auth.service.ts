@@ -70,4 +70,25 @@ export class AuthService {
       throw error;
     }
   }
+
+  async userValidate(options: { user_id: number; password: string }) {
+    try {
+      const userPassword = await this.userModel.findOne({
+        where: { id: options.user_id },
+        attributes: ['password'],
+      });
+      if (!userPassword) return null;
+      const isMatch = await bcrypt.compare(
+        options.password,
+        userPassword.password,
+      );
+
+      if (isMatch) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

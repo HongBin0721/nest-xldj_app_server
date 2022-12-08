@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import sequelize from 'sequelize';
+import sequelize, { WhereOptions } from 'sequelize';
 import apis from 'src/config/apis';
 import { Shop } from 'src/models/shop.model';
 import { User } from 'src/models/user.model';
@@ -86,7 +86,7 @@ export class ShopService {
     }
   }
 
-  async lists({ user_id, page_size = 20, page_index = 1 }) {
+  async lists({ user_id, page_size = 20, page_index = 1, status = 1 }) {
     try {
       const pageSize = page_size;
       const pageIndex = pageSize * (page_index - 1);
@@ -100,6 +100,9 @@ export class ShopService {
             model: ShopAddress,
           },
         ],
+        where: {
+          status,
+        },
         attributes: {
           include: [
             [
@@ -123,7 +126,11 @@ export class ShopService {
           ],
         },
       });
-      const count = await user.$count('shops');
+      const count = await user.$count('shops', {
+        where: {
+          status,
+        },
+      });
       return {
         lists,
         total: count,
@@ -192,6 +199,17 @@ export class ShopService {
           ],
         },
       });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async setStatus(option: { status: number; where: WhereOptions }) {
+    try {
+      return await this.shopModel.update(
+        { status: option.status },
+        { where: option.where },
+      );
     } catch (error) {
       throw error;
     }

@@ -1,7 +1,7 @@
-import { IsNotEmpty, IsInt } from 'class-validator';
+import { IsNotEmpty, IsNumberString } from 'class-validator';
 
 export class DetailDto {
-  @IsInt()
+  @IsNumberString()
   @IsNotEmpty({ message: '产品ID不能为空' })
-  product_id: number;
+  product_id: string;
 }

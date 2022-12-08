@@ -52,6 +52,12 @@ export class Shop extends Model<Shop> {
   })
   cover_pic: string;
 
+  @Column({
+    comment: '状态 1:营业 2:休息 3:关闭',
+    defaultValue: 2,
+  })
+  status: number;
+
   // 产品（一对多）
   @HasMany(() => Product)
   products: Product[];

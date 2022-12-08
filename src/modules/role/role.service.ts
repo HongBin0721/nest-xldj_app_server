@@ -18,7 +18,7 @@ export class RoleService {
 
       return lists;
     } catch (error) {
-      throw new HttpException(error, 600);
+      throw new HttpException(error, 400);
     }
   }
 
@@ -27,11 +27,11 @@ export class RoleService {
       const count = await this.roleModel.count({
         where: { name: appBody.name },
       });
-      if (count > 0) throw new HttpException('该角色名称已经存在', 600);
+      if (count > 0) throw new HttpException('该角色名称已经存在', 400);
       const res = await this.roleModel.create(appBody);
       return res;
     } catch (error) {
-      throw new HttpException(error, 600);
+      throw new HttpException(error, 400);
     }
   }
 }

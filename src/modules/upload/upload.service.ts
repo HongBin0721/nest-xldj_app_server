@@ -7,12 +7,12 @@ export class UploadService {
   async uploadFiles(files) {
     try {
       if (files.length === 0)
-        throw new HttpException('没有选择上传的文件', 600);
+        throw new HttpException('没有选择上传的文件', 400);
       const res = await this.uploadQiniu(files);
 
       return res;
     } catch (error) {
-      throw new HttpException(error, 600);
+      throw new HttpException(error, 400);
     }
   }
 

@@ -1,3 +1,5 @@
+import { UpdateDto } from './dto/update.dto';
+import { VipCard } from './../../models/vip_card.model';
 import * as sequelize from 'sequelize';
 import { HttpException, Injectable } from '@nestjs/common';
 import * as _ from 'lodash';
@@ -7,6 +9,7 @@ import { Role } from 'src/models/role.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { Follower } from 'src/models/follower.model';
 import { UserLogin } from 'src/models/user_login.model';
+import { WhereOptions } from 'sequelize';
 
 interface GetUsersBody {
   lists: User[];
@@ -107,12 +110,12 @@ export class UserService {
   async addUserRole(uid, rid: Array<number>) {
     try {
       const user = await this.userModel.findOne({ where: { id: uid } });
-      if (!user) throw new HttpException('用户ID不存在', 600);
+      if (!user) throw new HttpException('用户ID不存在', 400);
 
       const role = await this.roleModel.findOne({
         where: { id: Number(rid) },
       });
-      if (!role) throw new HttpException('角色ID不存在', 600);
+      if (!role) throw new HttpException('角色ID不存在', 400);
 
       user.$add('roles', role).then((res) => {
         console.log(res);
@@ -122,7 +125,7 @@ export class UserService {
         msg: '添加成功',
       };
     } catch (error) {
-      throw new HttpException(error, 600);
+      throw new HttpException(error, 400);
     }
   }
 
@@ -144,7 +147,7 @@ export class UserService {
   async follow(my_id, follow_id) {
     try {
       const hasUser = await this.findHasUser(follow_id);
-      if (!hasUser) throw new HttpException('要关注的用户不存在', 600);
+      if (!hasUser) throw new HttpException('要关注的用户不存在', 400);
 
       const count = await this.followerModel.count({
         where: {
@@ -152,7 +155,7 @@ export class UserService {
           followerId: follow_id,
         },
       });
-      if (count > 0) throw new HttpException('已经关注该用户', 600);
+      if (count > 0) throw new HttpException('已经关注该用户', 400);
 
       await this.followerModel.create({
         userId: my_id,
@@ -163,7 +166,7 @@ export class UserService {
         msg: '关注成功',
       };
     } catch (error) {
-      throw new HttpException(error, 600);
+      throw new HttpException(error, 400);
     }
   }
 
@@ -194,7 +197,7 @@ export class UserService {
         page_index: parseInt(page_index),
       };
     } catch (error) {
-      throw new HttpException(error, 600);
+      throw new HttpException(error, 400);
     }
   }
 
@@ -244,7 +247,7 @@ export class UserService {
         page_index: parseInt(page_index),
       };
     } catch (error) {
-      throw new HttpException(error, 600);
+      throw new HttpException(error, 400);
     }
   }
 
@@ -254,12 +257,12 @@ export class UserService {
       const user = await this.userModel.findOne({
         where: { id: my_id },
       });
-      if (!user) throw new HttpException('用户ID不存在', 600);
+      if (!user) throw new HttpException('用户ID不存在', 400);
 
       const unFollowUser = await this.userModel.findOne({
         where: { id: Number(unfollow_user_id) },
       });
-      if (!unFollowUser) throw new HttpException('用户ID不存在', 600);
+      if (!unFollowUser) throw new HttpException('用户ID不存在', 400);
 
       const res = await this.followerModel.destroy({
         where: { followerId: unfollow_user_id, userId: my_id },
@@ -270,7 +273,7 @@ export class UserService {
         data: res,
       };
     } catch (error) {
-      throw new HttpException(error, 600);
+      throw new HttpException(error, 400);
     }
   }
 
@@ -280,11 +283,11 @@ export class UserService {
       const userEmail = await this.userModel.findOne({
         where: { email: column.email },
       });
-      if (!!userEmail) throw new HttpException('邮箱已注册', 600);
+      if (!!userEmail) throw new HttpException('邮箱已注册', 400);
       const userTel = await this.userModel.findOne({
         where: { tel: column.tel },
       });
-      if (!!userTel) throw new HttpException('手机号已注册', 600);
+      if (!!userTel) throw new HttpException('手机号已注册', 400);
       const res = await this.userModel.create(column);
       await res.$create('vip_card', {});
       return {
@@ -295,7 +298,7 @@ export class UserService {
     } catch (error) {
       console.error(error);
 
-      throw new HttpException(error, 600);
+      throw new HttpException(error, 400);
     }
   }
 
@@ -321,13 +324,105 @@ export class UserService {
     }
   }
 
+  async detail(options: { where: WhereOptions }) {
+    try {
+      return await this.userModel.findOne({
+        where: options.where,
+        include: [
+          {
+            model: Role,
+          },
+          {
+            model: VipCard,
+          },
+        ],
+        attributes: {
+          include: [
+            [
+              sequelize.literal(`(
+                SELECT COUNT(*)
+                FROM shop
+                WHERE
+                    shop.boss_id = user.id
+            )`),
+              'shop_count',
+            ],
+            [
+              sequelize.literal(`(
+                SELECT COUNT(*)
+                FROM user_login
+                WHERE
+                user_login.user_id = user.id
+            )`),
+              'login_history_count',
+            ],
+            [
+              sequelize.literal(`(
+                SELECT COUNT(*)
+                FROM user_product_favorite_associations
+                WHERE
+                user_product_favorite_associations.user_id = user.id
+            )`),
+              'product_favorite_count',
+            ],
+            [
+              sequelize.literal(`(
+                SELECT COUNT(*)
+                FROM user_shop_follow_associations
+                WHERE
+                user_shop_follow_associations.user_id = user.id
+            )`),
+              'follow_shop_count',
+            ],
+            [
+              sequelize.literal(`(
+                SELECT COUNT(*)
+                FROM user_product_browse_associations
+                WHERE
+                user_product_browse_associations.user_id = user.id
+            )`),
+              'product_browse_count',
+            ],
+          ],
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async update(options: { data: UpdateDto; where: WhereOptions }) {
+    try {
+      return await this.userModel.update(options.data, {
+        where: options.where,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async setPassword(options: { newPassword: string; user_id: number }) {
+    try {
+      return await this.userModel.update(
+        { password: options.newPassword },
+        {
+          where: {
+            id: options.user_id,
+          },
+        },
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // // 删除用户
   // async removeUser(id: number) {
   //   try {
   //     const res = await this.userModel.delete(id);
   //     return res;
   //   } catch (error) {
-  //     throw new HttpException(error, 600);
+  //     throw new HttpException(error, 400);
   //   }
   // }
 }

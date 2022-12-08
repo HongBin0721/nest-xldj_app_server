@@ -22,7 +22,9 @@ export class AuthController {
       );
 
       if (!user) {
-        throw '用户名或密码错误';
+        throw {
+          message: '用户名或密码错误',
+        };
       }
       await this.authService.createLoginHistory({ user: user, ip });
       return {
@@ -31,7 +33,7 @@ export class AuthController {
         info: user,
       };
     } catch (error) {
-      return new HttpException(error, 600);
+      throw new HttpException(error, 400);
     }
   }
 }
