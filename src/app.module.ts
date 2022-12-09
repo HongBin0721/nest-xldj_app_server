@@ -60,6 +60,7 @@ const envFilePath = () => {
       // models: [User, UserRole, Role, UserFollow, UserFan], // 要开始使用`User`模型，我们需要通过将其插入到`forRoot()`方法选项的`models`数组中来让`Sequelize`知道它的存在。
       autoLoadModels: true,
       synchronize: true,
+      timezone: '+08:00', // 东八区
       sync: {
         alter: true,
       },

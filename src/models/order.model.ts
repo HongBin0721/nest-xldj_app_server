@@ -18,7 +18,7 @@ import { Technician } from './technician.model';
 import { User } from './user.model';
 
 @Table({
-  tableName: 'order',
+  tableName: 'orders',
   timestamps: true, // 默认true。true时会带createdAt、updatedAt字段查表
 })
 export class Order extends Model<Order> {
