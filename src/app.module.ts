@@ -24,9 +24,9 @@ const envFilePath = () => {
   if (IS_DEV) {
     return DEFAULT_ENV;
   } else if (IS_TEST) {
-    return ['.env.test'];
+    return ['.env.test', '.env.db.dev'];
   } else if (IS_PROD) {
-    return ['.env.prod'];
+    return ['.env.prod', '.env.db.prod'];
   } else {
     return DEFAULT_ENV;
   }
